@@ -9,9 +9,7 @@ import Foundation
 import SwiftUI
 
 struct WorkoutCollectionView: View {
-    let collectionService : CollectionWorkoutService
-    let editService: EditWorkoutService
-    let deleteService: DeleteWorkoutService
+
     
     var body: some View {
         NavigationView {

@@ -8,5 +8,5 @@
 import Foundation
 
 protocol CollectionWorkoutService {
-    
+    func exec() async -> [Workout]
 }
