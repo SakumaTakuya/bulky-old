@@ -9,17 +9,18 @@ import Foundation
 import SwiftUI
 
 struct WorkoutCollectionView: View {
-
+    @StateObject var observable: WorkoutCollectionViewObservable
+    @State private var showingAddWorkout = false
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(workouts, id: \.id) { workout in
+                ForEach(observable.workouts, id: \.id) { workout in
                     NavigationLink(destination: WorkoutDetailView()) {
                         Text(workout.menu.name)
                     }
                 }
-                .onDelete(perform: deleteWorkout)
+                .onDelete(perform: observable.delete)
             }
             .navigationBarTitle("Workouts")
             .navigationBarItems(trailing: addButton)
@@ -30,39 +31,27 @@ struct WorkoutCollectionView: View {
                     observable: EditWorkoutObservable()
                 ) { workout in
                     showingAddWorkout = false
-                    Task {
-                        await editService.exec(data: workout)
-                    }
+                    observable.update(data: workout)
                 }
             }
         }
     }
-    
-    @State private var showingAddWorkout = false
     
     private var addButton: some View {
         Button(action: { showingAddWorkout = true }) {
             Image(systemName: "plus")
         }
     }
-    
-    private func deleteWorkout(at offsets: IndexSet) {
-        workouts.remove(atOffsets: offsets)
-    }
 }
 
 #if DEBUG
-struct EditWorkoutStubService : EditWorkoutService {
-    var workouts: [Workout] = []
-    func exec(data : WorkoutEditData) async {
-        
-    }
-}
-
 struct WorkoutCollectionView_Previews: PreviewProvider {
     static var previews: some View {
         WorkoutCollectionView(
-            editService: <#T##EditWorkoutService#>
+            observable: WorkoutCollectionViewObservable(
+                collectionService: CollectionWorkoutServicePreview(),
+                editService: EditWorkoutServicePreview()
+            )
         )
     }
 }

@@ -15,8 +15,8 @@ struct Workout : Codable, Equatable {
     
     init(
         menu: Menu,
-        date: Date,
-        sets: [Exercise],
+        date: Date = .now,
+        sets: [Exercise] = [],
         id: UUID? = nil
     ) {
         self.id = id ?? UUID()

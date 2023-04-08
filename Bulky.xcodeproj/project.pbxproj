@@ -12,6 +12,7 @@
 		C3C7074729C73C13005B3EFB /* EditWorkoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7074629C73C13005B3EFB /* EditWorkoutService.swift */; };
 		C3C7074929CFDBE8005B3EFB /* CollectionWorkoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7074829CFDBE8005B3EFB /* CollectionWorkoutService.swift */; };
 		C3C7074C29D1E96A005B3EFB /* WorkoutCollectionViewObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7074B29D1E96A005B3EFB /* WorkoutCollectionViewObservable.swift */; };
+		C3C7074F29E17B0C005B3EFB /* WorkoutHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7074E29E17B0C005B3EFB /* WorkoutHistory.swift */; };
 		C3DD328C299D220B0055DC42 /* BulkyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DD328B299D220B0055DC42 /* BulkyApp.swift */; };
 		C3DD328E299D220B0055DC42 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DD328D299D220B0055DC42 /* ContentView.swift */; };
 		C3DD3290299D220C0055DC42 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3DD328F299D220C0055DC42 /* Assets.xcassets */; };
@@ -59,6 +60,7 @@
 		C3C7074629C73C13005B3EFB /* EditWorkoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWorkoutService.swift; sourceTree = "<group>"; };
 		C3C7074829CFDBE8005B3EFB /* CollectionWorkoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionWorkoutService.swift; sourceTree = "<group>"; };
 		C3C7074B29D1E96A005B3EFB /* WorkoutCollectionViewObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCollectionViewObservable.swift; sourceTree = "<group>"; };
+		C3C7074E29E17B0C005B3EFB /* WorkoutHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistory.swift; sourceTree = "<group>"; };
 		C3DD3288299D220B0055DC42 /* Bulky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bulky.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3DD328B299D220B0055DC42 /* BulkyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkyApp.swift; sourceTree = "<group>"; };
 		C3DD328D299D220B0055DC42 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 			children = (
 				C3DD32CA29A098BF0055DC42 /* Exercise.swift */,
 				C3DD338329C6C0430055DC42 /* WorkoutEditData.swift */,
+				C3C7074E29E17B0C005B3EFB /* WorkoutHistory.swift */,
 			);
 			path = Value;
 			sourceTree = "<group>";
@@ -445,6 +448,7 @@
 				C3C7074C29D1E96A005B3EFB /* WorkoutCollectionViewObservable.swift in Sources */,
 				C3DD328E299D220B0055DC42 /* ContentView.swift in Sources */,
 				C3DD32C729A095840055DC42 /* Menu.swift in Sources */,
+				C3C7074F29E17B0C005B3EFB /* WorkoutHistory.swift in Sources */,
 				C3DD32BC299D27A10055DC42 /* DataSource.swift in Sources */,
 				C3C7074729C73C13005B3EFB /* EditWorkoutService.swift in Sources */,
 				C3DD32DE29B454340055DC42 /* WorkoutRepository.swift in Sources */,

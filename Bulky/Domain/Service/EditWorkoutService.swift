@@ -42,7 +42,11 @@ extension EditWorkoutDefaultService : EditWorkoutService {
             sets: data.sets,
             id: data.id
         ))
+    }
+}
 
+struct EditWorkoutServicePreview : EditWorkoutService {
+    func exec(data : WorkoutEditData) async -> Void {
         
     }
 }

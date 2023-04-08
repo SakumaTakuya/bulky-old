@@ -7,11 +7,6 @@
 
 import Foundation
 
-struct WorkHistory {
-    let menu : Menu
-    let sets : [Exercise]
-}
-
 protocol SearchWorkHistoryService {
     func exec(name : String) async -> [WorkHistory]
 }
@@ -39,8 +34,18 @@ extension SearchWorkHistoryServiceDefault : SearchWorkHistoryService {
         return await menuRepository
             .search(name: name)
             .map{
-                WorkHistory(menu: $0, sets: [])
+                WorkHistory(menu: $0)
             }
         
+    }
+}
+
+struct SearchWorkHistoryServicePreview : SearchWorkHistoryService {
+    func exec(name : String) async -> [WorkHistory] {
+        return [
+            WorkHistory(menu: Menu(name: "menu1")),
+            WorkHistory(menu: Menu(name: "menu2")),
+            WorkHistory(menu: Menu(name: "menu3"))
+        ]
     }
 }

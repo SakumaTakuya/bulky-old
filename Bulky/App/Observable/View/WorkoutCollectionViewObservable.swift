@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 class WorkoutCollectionViewObservable: ObservableObject {
     let collectionService : CollectionWorkoutService
     let editService: EditWorkoutService
@@ -20,11 +21,25 @@ class WorkoutCollectionViewObservable: ObservableObject {
     }
     
     func update(data : WorkoutEditData) {
+        let newItem = Workout(
+            menu: Menu(name: data.name, alts: []),
+            date: data.date,
+            sets: data.sets,
+            id: data.id
+        )
+        
+        if (workouts.contains { $0.id == data.id }) {
+            workouts = workouts.map { $0.id == data.id ? newItem : $0 }
+        } else {
+            workouts.append(newItem)
+        }
+        
         Task {
-            workouts = 
-            
-            
             await editService.exec(data: data)
         }
+    }
+    
+    func delete(at offsets: IndexSet) {
+        workouts.remove(atOffsets: offsets)
     }
 }

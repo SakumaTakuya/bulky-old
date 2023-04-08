@@ -10,3 +10,13 @@ import Foundation
 protocol CollectionWorkoutService {
     func exec() async -> [Workout]
 }
+
+struct CollectionWorkoutServicePreview : CollectionWorkoutService {
+    func exec() async -> [Workout] {
+        return [
+            Workout(menu: Menu(name: "menu1")),
+            Workout(menu: Menu(name: "menu2")),
+            Workout(menu: Menu(name: "menu3"))
+        ]
+    }
+}

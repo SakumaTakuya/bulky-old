@@ -40,3 +40,9 @@ extension CreateWorkoutServiceDefault : CreateWorkoutService {
         ))
     }
 }
+
+struct CreateWorkoutServicePreview : CreateWorkoutService {
+    func exec(name : String, date : Date, sets : [Exercise]) async -> Void {
+        
+    }
+}
