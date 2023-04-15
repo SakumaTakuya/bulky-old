@@ -8,23 +8,15 @@
 import Foundation
 import SwiftUI
 
-struct SearchResult<T : CustomStringConvertible> : Identifiable, CustomStringConvertible {
-    let id = UUID()
-    let data : T
-    var description: String { return data.description }
-    
-    init(_ data: T) {
-        self.data = data
-    }
-}
 
-
-struct SearchBar<T: CustomStringConvertible, Content : View>: View {
+struct SearchBar<
+    T: Hashable & CustomStringConvertible,
+    Content : View>: View {
     @State var text: String = ""
-    @State var results: [SearchResult<T>] = []
+    @State var results: [T] = []
     @Binding var isSelected : Bool
-    let onSearch : (String) -> [SearchResult<T>]
-    let content: ([SearchResult<T>]) -> Content
+    let onSearch : (String) -> [T]
+    let content: (T) -> Content
     
     var body: some View {
         VStack {
@@ -55,11 +47,13 @@ struct SearchBar<T: CustomStringConvertible, Content : View>: View {
 
                     }
                     if !results.isEmpty && isSelected {
-                        ForEach(results) { result in
-                            Button(result.description) {
+                        ForEach(results, id: \.self) { result in
+                            Button {
                                 text = result.description
                                 isSelected = false
-                            }.buttonStyle(.borderless)
+                            } label: {
+                                content(result)
+                            }
                         }
                     }
                 }
@@ -75,20 +69,12 @@ struct SearchBarView : View {
     var body: some View {
         Form {
             Section {
-                SearchBar<String, Text>(isSelected: $focus) { value in
-                    if value.isEmpty {
-                        return []
+                SearchBar(isSelected: $focus, onSearch: getResults) { value in
+                    HStack {
+                        Text(value.description)
+                        Spacer()
+                        Image(systemName: "chevron.right")
                     }
-                    
-                    return [
-                        SearchResult("\(value)...1"),
-                        SearchResult("\(value)...2"),
-                        SearchResult("\(value)...3"),
-                        SearchResult("\(value)...4"),
-                        SearchResult("\(value)...5"),
-                    ]
-                } content: { value in
-                    Text(value.description)
                 }
             } header: {
                 Text("menu")
@@ -104,7 +90,20 @@ struct SearchBarView : View {
             }
             
         }
-
+    }
+    
+    private func getResults(search : String) -> [String] {
+        if (search.isEmpty) {
+            return []
+        }
+        
+        return [
+            "\(search)...1",
+            "\(search)...2",
+            "\(search)...3",
+            "\(search)...4",
+            "\(search)...5",
+        ]
     }
 }
 
