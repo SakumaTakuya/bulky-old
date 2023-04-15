@@ -18,34 +18,50 @@ struct SearchResult<T : CustomStringConvertible> : Identifiable, CustomStringCon
     }
 }
 
-struct SearchBar<T: CustomStringConvertible>: View {
+
+struct SearchBar<T: CustomStringConvertible, Content : View>: View {
     @State var text: String = ""
     @State var results: [SearchResult<T>] = []
     @Binding var isSelected : Bool
     let onSearch : (String) -> [SearchResult<T>]
+    let content: ([SearchResult<T>]) -> Content
     
     var body: some View {
         VStack {
-            HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("test", text: $text)
-                    .onTapGesture {
-                        isSelected = true
-                    }
-                    .onChange(of: text, perform: { newText in
-                        results = onSearch(newText)
-                    })
-                if (isSelected) {
-                    Button("cancel") {
-                        isSelected = false
-                    }
+            Button(action: {
+                isSelected = true
+            }) {
+                HStack {
+                    Text(text)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
-            if !results.isEmpty && isSelected {
-                ForEach(results) { result in
-                     Button(result.description) {
-                         text = result.description
-                     }.buttonStyle(.borderless)
+            .buttonStyle(.borderless)
+            .accentColor(Color.primary)
+            .sheet(isPresented: $isSelected) {
+                Form {
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                        TextField("test", text: $text)
+                            .onTapGesture {
+                                isSelected = true
+                            }
+                            .onChange(of: text, perform: { newText in
+                                results = onSearch(newText)
+                            })
+                        Button("cancel") {
+                            isSelected = false
+                        }
+
+                    }
+                    if !results.isEmpty && isSelected {
+                        ForEach(results) { result in
+                            Button(result.description) {
+                                text = result.description
+                                isSelected = false
+                            }.buttonStyle(.borderless)
+                        }
+                    }
                 }
             }
         }
@@ -59,7 +75,7 @@ struct SearchBarView : View {
     var body: some View {
         Form {
             Section {
-                SearchBar<String>(isSelected: $focus) { value in
+                SearchBar<String, Text>(isSelected: $focus) { value in
                     if value.isEmpty {
                         return []
                     }
@@ -71,7 +87,11 @@ struct SearchBarView : View {
                         SearchResult("\(value)...4"),
                         SearchResult("\(value)...5"),
                     ]
+                } content: { value in
+                    Text(value.description)
                 }
+            } header: {
+                Text("menu")
             }
             
             Section {
@@ -79,6 +99,8 @@ struct SearchBarView : View {
                 Text("TEST")
                 Text("TEST")
                 Text("TEST")
+            } header: {
+                Text("menu")
             }
             
         }
