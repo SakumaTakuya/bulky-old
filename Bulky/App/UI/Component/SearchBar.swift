@@ -8,39 +8,46 @@
 import Foundation
 import SwiftUI
 
-struct SearchBar: View {
+struct SearchResult<T : CustomStringConvertible> : Identifiable, CustomStringConvertible {
+    let id = UUID()
+    let data : T
+    var description: String { return data.description }
+    
+    init(_ data: T) {
+        self.data = data
+    }
+}
+
+struct SearchBar<T: CustomStringConvertible>: View {
     @State var text: String = ""
-    @State var results: [String] = []
+    @State var results: [SearchResult<T>] = []
     @Binding var isSelected : Bool
-    let onSearch : (String) -> [String]
+    let onSearch : (String) -> [SearchResult<T>]
     
     var body: some View {
         VStack {
-            Form {
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                    TextField("test", text: $text)
-                        .onTapGesture {
-                            isSelected = true
-                        }
-                    if (isSelected) {
-                        Button("cancel") {
-                            isSelected = false
-                        }
+            HStack {
+                Image(systemName: "magnifyingglass")
+                TextField("test", text: $text)
+                    .onTapGesture {
+                        isSelected = true
                     }
-                }
-                if (!results.isEmpty && isSelected) {
-                    List(results, id: \.self) { result in
-                        Button(result) {
-                            text = result
-                            isSelected = false
-                        }
+                    .onChange(of: text, perform: { newText in
+                        results = onSearch(newText)
+                    })
+                if (isSelected) {
+                    Button("cancel") {
+                        isSelected = false
                     }
                 }
             }
-            .onChange(of: text, perform: { newText in
-                results = onSearch(newText)
-            })
+            if !results.isEmpty && isSelected {
+                ForEach(results) { result in
+                     Button(result.description) {
+                         text = result.description
+                     }.buttonStyle(.borderless)
+                }
+            }
         }
     }
 }
@@ -50,20 +57,32 @@ struct SearchBarView : View {
     @State var focus : Bool = false
     
     var body: some View {
-        SearchBar(isSelected: $focus) { value in
-            if (value.isEmpty) {
-                return []
+        Form {
+            Section {
+                SearchBar<String>(isSelected: $focus) { value in
+                    if value.isEmpty {
+                        return []
+                    }
+                    
+                    return [
+                        SearchResult("\(value)...1"),
+                        SearchResult("\(value)...2"),
+                        SearchResult("\(value)...3"),
+                        SearchResult("\(value)...4"),
+                        SearchResult("\(value)...5"),
+                    ]
+                }
             }
             
-            return [
-                "\(value)...1",
-                "\(value)...2",
-                "\(value)...3",
-                "\(value)...4",
-            ]
-        }.onTapGesture {
-            focus = false
+            Section {
+                Text("TEST")
+                Text("TEST")
+                Text("TEST")
+                Text("TEST")
+            }
+            
         }
+
     }
 }
 
