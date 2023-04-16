@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Workout : Codable, Equatable {
+struct Workout : Codable, Hashable, Identifiable {
     let id : UUID
     let menu : Menu
     let date : Date
@@ -25,3 +25,5 @@ struct Workout : Codable, Equatable {
         self.sets = sets
     }
 }
+
+

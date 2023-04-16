@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SearchWorkHistoryService {
-    func exec(name : String) async -> [WorkHistory]
+    func exec(name : String) async -> [WorkoutHistory]
 }
 
 struct SearchWorkHistoryServiceDefault {
@@ -22,30 +22,30 @@ struct SearchWorkHistoryServiceDefault {
 }
 
 extension SearchWorkHistoryServiceDefault : SearchWorkHistoryService {
-    func exec(name : String) async -> [WorkHistory] {
+    func exec(name : String) async -> [WorkoutHistory] {
         let workouts = await workoutRepository.search(name: name)
         
         if (workouts.count > 0) {
             return workouts.map {
-                WorkHistory(menu: $0.menu, sets: $0.sets)
+                WorkoutHistory(menu: $0.menu, sets: $0.sets)
             }
         }
         
         return await menuRepository
             .search(name: name)
             .map{
-                WorkHistory(menu: $0)
+                WorkoutHistory(menu: $0)
             }
         
     }
 }
 
 struct SearchWorkHistoryServicePreview : SearchWorkHistoryService {
-    func exec(name : String) async -> [WorkHistory] {
+    func exec(name : String) async -> [WorkoutHistory] {
         return [
-            WorkHistory(menu: Menu(name: "menu1")),
-            WorkHistory(menu: Menu(name: "menu2")),
-            WorkHistory(menu: Menu(name: "menu3"))
+            WorkoutHistory(menu: Menu(name: "menu1")),
+            WorkoutHistory(menu: Menu(name: "menu2")),
+            WorkoutHistory(menu: Menu(name: "menu3"))
         ]
     }
 }

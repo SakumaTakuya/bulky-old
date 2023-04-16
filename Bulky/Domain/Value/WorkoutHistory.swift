@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct WorkHistory {
+struct WorkoutHistory : Codable, Hashable {
     let menu : Menu
     let sets : [Exercise]
     
@@ -16,4 +16,8 @@ struct WorkHistory {
         self.menu = menu
         self.sets = sets
     }
+}
+
+extension WorkoutHistory : CustomStringConvertible {
+    var description: String { return menu.name }
 }
