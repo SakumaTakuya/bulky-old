@@ -1,21 +1,25 @@
 //
-//  SearchBar.swift
+//  SearchForm.swift
 //  Bulky
 //
-//  Created by Sakuma Takuya on 2023/02/18.
+//  Created by Sakuma Takuya on 2023/05/28.
 //
 
 import Foundation
 import SwiftUI
 
+enum Selection<Data> {
+    case Searched(Data)
+    case New(String)
+}
 
-struct SearchBar<Content : View>: View {
+struct SearchForm<Data : Hashable, Content : View>: View {
     @State var textField: String = ""
     @State var isSelected : Bool = false
-    @Binding var text: String
-    let results: [String]
+    @Binding var selection: Selection<Data>
+    let searchResults: [Data]
     let onSearch : (String) -> Void
-    let content: (String) -> Content
+    let content: (Selection<Data>) -> Content
     
     var body: some View {
         VStack {
@@ -46,21 +50,24 @@ struct SearchBar<Content : View>: View {
                         
                     }
                     if !textField.isEmpty && isSelected {
+                        let new = Selection<Data>.New(textField)
                         Button {
-                            text = textField
+                            selection = new
                             isSelected = false
                         } label: {
-                            content(textField)
+                            content(new)
                         }
                     }
                     
-                    if !results.isEmpty && isSelected {
-                        ForEach(results, id: \.self) { result in
+                    if !searchResults.isEmpty && isSelected {
+                        ForEach(searchResults, id: \.self) { result in
+                            let searched = Selection<Data>.Searched(result)
+                            
                             Button {
-                                text = result
+                                selection = searched
                                 isSelected = false
                             } label: {
-                                content(result)
+                                content(searched)
                             }
                         }
                     }
@@ -70,21 +77,27 @@ struct SearchBar<Content : View>: View {
     }
 }
 
+
 #if DEBUG
-struct SearchBar_PreviewsView : View {
-    @State var text : String = ""
+struct SearchForm_PreviewsView : View {
+    @State var selection : Selection<String> = .New("")
     @State var searched: [String] = []
     
     var body: some View {
         Form {
             Section(header: Text("menu")) {
-                SearchBar(
-                    text: $text,
-                    results: searched,
+                SearchForm(
+                    selection: $selection,
+                    searchResults: searched,
                     onSearch: getResults
                 ) { value in
                     HStack {
-                        Text(value.description)
+                        switch value {
+                        case let .Searched(data):
+                            Text(data.description)
+                        case let .New(name):
+                            Text(name)
+                        }
                         Spacer()
                         Image(systemName: "chevron.right")
                     }
@@ -117,9 +130,9 @@ struct SearchBar_PreviewsView : View {
 }
 
 
-struct SearchBar_Previews: PreviewProvider {
+struct SearchForm_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBar_PreviewsView()
+        SearchForm_PreviewsView()
     }
 }
 #endif

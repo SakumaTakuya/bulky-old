@@ -26,4 +26,7 @@ struct Workout : Codable, Hashable, Identifiable {
     }
 }
 
+extension Workout: CustomStringConvertible {
+    var description: String { return menu.name }
+}
 

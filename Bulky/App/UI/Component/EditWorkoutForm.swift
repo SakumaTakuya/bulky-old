@@ -18,6 +18,7 @@ struct EditWorkoutForm: View {
                 Section(header: Text("Menu")) {
                     SearchBar(
                         text: $observable.data.name,
+                        results: observable.searched,
                         onSearch: observable.search
                     ) { value in
                         HStack {

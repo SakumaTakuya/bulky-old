@@ -10,13 +10,34 @@ import Foundation
 
 class EditWorkoutObservable : ObservableObject {
     @Published var data : WorkoutEditData
-    @Published var historyMap: Dictionary<String, WorkoutHistory>
+    @Published var searched: [String] = []
+    @Published var historyMap: Dictionary<String, Workout>
     
-    init(data: WorkoutEditData = WorkoutEditData()) {
+    let searchService: SearchWorkHistoryService
+    
+    init(
+        data: WorkoutEditData = WorkoutEditData(),
+        service: SearchWorkHistoryService
+    ) {
         self.data = data
+        self.historyMap = Dictionary()
+        self.searchService = service
     }
     
-    func search(request : String) -> [String] {
-        return []
+    func search(request : String) {
+        Task {
+            let result = await self.searchService.exec(name: request)
+            searched.removeAll()
+            result.forEach{
+                let hash = "\($0.description)"
+                searched.append(hash)
+                
+                
+            }
+            
+            
+        }
     }
+    
+    
 }
