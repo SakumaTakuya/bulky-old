@@ -27,12 +27,12 @@ struct WorkoutCollectionView: View {
         }
         .sheet(isPresented: $showingAddWorkout) {
             NavigationView {
-                EditWorkoutForm(
-                    observable: EditWorkoutObservable()
-                ) { workout in
-                    showingAddWorkout = false
-                    observable.update(data: workout)
-                }
+//                EditWorkoutForm(
+//                    observable: EditWorkoutObservable()
+//                ) { workout in
+//                    showingAddWorkout = false
+//                    observable.update(data: workout)
+//                }
             }
         }
     }

@@ -13,12 +13,14 @@ enum Selection<Data> {
     case New(String)
 }
 
+
 struct SearchForm<Data : Hashable, Content : View>: View {
     @State var textField: String = ""
     @State var isSelected : Bool = false
-    @Binding var selection: Selection<Data>
+    
     let searchResults: [Data]
     let onSearch : (String) -> Void
+    let onSelect : (Selection<Data>) -> Void
     let content: (Selection<Data>) -> Content
     
     var body: some View {
@@ -52,7 +54,7 @@ struct SearchForm<Data : Hashable, Content : View>: View {
                     if !textField.isEmpty && isSelected {
                         let new = Selection<Data>.New(textField)
                         Button {
-                            selection = new
+                            onSelect(new)
                             isSelected = false
                         } label: {
                             content(new)
@@ -64,7 +66,8 @@ struct SearchForm<Data : Hashable, Content : View>: View {
                             let searched = Selection<Data>.Searched(result)
                             
                             Button {
-                                selection = searched
+                                textField = "\(result)"
+                                onSelect(searched)
                                 isSelected = false
                             } label: {
                                 content(searched)
@@ -80,16 +83,15 @@ struct SearchForm<Data : Hashable, Content : View>: View {
 
 #if DEBUG
 struct SearchForm_PreviewsView : View {
-    @State var selection : Selection<String> = .New("")
     @State var searched: [String] = []
     
     var body: some View {
         Form {
             Section(header: Text("menu")) {
                 SearchForm(
-                    selection: $selection,
                     searchResults: searched,
-                    onSearch: getResults
+                    onSearch: getResults,
+                    onSelect: select
                 ) { value in
                     HStack {
                         switch value {
@@ -126,6 +128,10 @@ struct SearchForm_PreviewsView : View {
             "\(search)...4",
             "\(search)...5",
         ]
+    }
+    
+    private func select(data : Selection<String>) {
+        print(data)
     }
 }
 

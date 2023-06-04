@@ -9,30 +9,48 @@ import Foundation
 import SwiftUI
 
 struct EditWorkoutForm: View {
-    @ObservedObject var observable: EditWorkoutObservable
+    @StateObject var observable: EditWorkoutObservable
     var onAppend: (WorkoutEditData) -> Void
+    
+    init(
+        observable: EditWorkoutObservable,
+        onAppend: @escaping (WorkoutEditData
+    ) -> Void) {
+        self._observable = StateObject(wrappedValue: observable)
+        self.onAppend = onAppend
+    }
     
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Menu")) {
-                    SearchBar(
-                        text: $observable.data.name,
-                        results: observable.searched,
-                        onSearch: observable.search
+                    SearchForm(
+                        searchResults: observable.searched,
+                        onSearch: observable.search,
+                        onSelect: observable.select
                     ) { value in
                         HStack {
-                            Text(value)
+                            switch value {
+                            case let .New(request):
+                                Text(request)
+                            case let .Searched(workout):
+                                Text(workout.menu.name)
+                            }
                             Spacer()
                             Image(systemName: "chevron.right")
                         }
                     }
                 }
                 Section(header: Text("Workout Details")) {
-                    TextField(
-                        "Workout Name",
-                        text: $observable.data.name
-                    )
+                    ForEach(observable.data.sets, id: \.self) { exercise in
+                        let text = "\(exercise.weight)"
+                        Text(text)
+                    }
+                    
+                    Button("add") {
+                        observable.addExercise()
+                    }
+
                     DatePicker(
                         "Date",
                         selection: $observable.data.date,
@@ -66,20 +84,29 @@ struct EditWorkoutForm: View {
 }
 
 #if DEBUG
+class Test : ObservableObject {
+    let service : SearchWorkHistoryService
+    
+    init(service: SearchWorkHistoryService) {
+        self.service = service
+    }
+}
+
 struct EditWorkoutFormPreviewsView : View {
-    @StateObject var observable: EditWorkoutObservable = EditWorkoutObservable()
+    @Environment(\.injected) var injected : Container
     
     var body: some View {
         EditWorkoutForm(
-            observable: observable
-        ) { data in
-            print(data)
-        }
+            observable: injected.createEditWorkoutObservable()) { data in
+                print(data)
+            }
     }
 }
 
 
 struct EditWorkoutForm_Previews: PreviewProvider {
+    
+    
     static var previews: some View {
         EditWorkoutFormPreviewsView()
     }
