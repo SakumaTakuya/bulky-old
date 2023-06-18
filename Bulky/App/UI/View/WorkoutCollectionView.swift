@@ -9,15 +9,21 @@ import Foundation
 import SwiftUI
 
 struct WorkoutCollectionView: View {
+    @Environment(\.injected) var injected : Container
+    
     @StateObject var observable: WorkoutCollectionViewObservable
     @State private var showingAddWorkout = false
+    
+    init(observable: WorkoutCollectionViewObservable) {
+        self._observable = StateObject(wrappedValue: observable)
+    }
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(observable.workouts, id: \.id) { workout in
                     NavigationLink(destination: WorkoutDetailView()) {
-                        Text(workout.menu.name)
+                        WorkoutCell(workout)
                     }
                 }
                 .onDelete(perform: observable.delete)
@@ -27,12 +33,11 @@ struct WorkoutCollectionView: View {
         }
         .sheet(isPresented: $showingAddWorkout) {
             NavigationView {
-//                EditWorkoutForm(
-//                    observable: EditWorkoutObservable()
-//                ) { workout in
-//                    showingAddWorkout = false
-//                    observable.update(data: workout)
-//                }
+                EditWorkoutForm(
+                    observable: injected.createEditWorkoutObservable()
+                ) { workout in
+                    observable.update(data: workout)
+                }
             }
         }
     }
@@ -45,14 +50,19 @@ struct WorkoutCollectionView: View {
 }
 
 #if DEBUG
+struct WorkoutCollectionViewPreviewsView : View {
+    @Environment(\.injected) var injected : Container
+    
+    var body: some View {
+        WorkoutCollectionView(
+            observable: injected.createWorkoutCollectionViewObservable()
+        )
+    }
+}
+
 struct WorkoutCollectionView_Previews: PreviewProvider {
     static var previews: some View {
-        WorkoutCollectionView(
-            observable: WorkoutCollectionViewObservable(
-                collectionService: CollectionWorkoutServicePreview(),
-                editService: EditWorkoutServicePreview()
-            )
-        )
+        WorkoutCollectionViewPreviewsView()
     }
 }
 #endif

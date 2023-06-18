@@ -9,14 +9,15 @@ import Foundation
 import SwiftUI
 
 struct EditWorkoutForm: View {
-    @StateObject var observable: EditWorkoutObservable
+    @Environment(\.dismiss) var dismiss
+    @ObservableState(\.test) var observable: EditWorkoutObservable?
     var onAppend: (WorkoutEditData) -> Void
     
     init(
         observable: EditWorkoutObservable,
         onAppend: @escaping (WorkoutEditData
     ) -> Void) {
-        self._observable = StateObject(wrappedValue: observable)
+//        self._observable = StateObject(wrappedValue: observable)
         self.onAppend = onAppend
     }
     
@@ -34,7 +35,7 @@ struct EditWorkoutForm: View {
                             case let .New(request):
                                 Text(request)
                             case let .Searched(workout):
-                                Text(workout.menu.name)
+                                WorkoutCell(workout)
                             }
                             Spacer()
                             Image(systemName: "chevron.right")
@@ -61,21 +62,17 @@ struct EditWorkoutForm: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Edit Workout")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // NOTE: application will crash when using Button
-                    Text("cancel")
-                        .onTapGesture {
-                            
-                        }
-                        .foregroundColor(.accentColor)
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("cancel") {
+                        dismiss()
+                    }
                 }
 
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Text("append")
-                        .onTapGesture {
-                            onAppend(observable.data)
-                        }
-                        .foregroundColor(.accentColor)
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("append") {
+                        dismiss()
+                        onAppend(observable.data)
+                    }
                 }
                 
             }
@@ -105,8 +102,6 @@ struct EditWorkoutFormPreviewsView : View {
 
 
 struct EditWorkoutForm_Previews: PreviewProvider {
-    
-    
     static var previews: some View {
         EditWorkoutFormPreviewsView()
     }
