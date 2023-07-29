@@ -53,23 +53,3 @@ extension View {
             .environment(\.injected, container)
     }
 }
-
-@propertyWrapper
-struct ObservableState<T> where T : ObservableObject {
-    @Environment(\.injected) var injected : Container
-    let keyPath : KeyPath<Container, T>
-    var wrappedValue: T {
-        get {
-            projectedValue.wrappedValue
-        }
-    }
-    
-    lazy var projectedValue: StateObject<T> = {
-        let value = injected[keyPath: keyPath]
-        return StateObject(wrappedValue: value)
-    }()
-    
-    init(_ keyPath : KeyPath<Container, T>) {
-        self.keyPath = keyPath
-    }
-}

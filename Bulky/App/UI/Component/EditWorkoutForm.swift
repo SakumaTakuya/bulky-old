@@ -10,14 +10,14 @@ import SwiftUI
 
 struct EditWorkoutForm: View {
     @Environment(\.dismiss) var dismiss
-    @ObservableState(\.test) var observable: EditWorkoutObservable?
+    @StateObject var observable: EditWorkoutObservable
     var onAppend: (WorkoutEditData) -> Void
     
     init(
         observable: EditWorkoutObservable,
         onAppend: @escaping (WorkoutEditData
     ) -> Void) {
-//        self._observable = StateObject(wrappedValue: observable)
+        self._observable = StateObject(wrappedValue: observable)
         self.onAppend = onAppend
     }
     
