@@ -24,7 +24,9 @@ struct EditWorkoutDefaultService {
 
 extension EditWorkoutDefaultService : EditWorkoutService {
     func exec(data: WorkoutEditData) async {
+        // menu があればそれを利用する
         guard let menu = await menuRepository.get(name: data.name) else {
+            // なければ menu ごと作成する
             let created = await menuRepository.store(
                 item: Menu(name: data.name, alts: [])
             )

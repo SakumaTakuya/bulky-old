@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct EditWorkoutForm: View {
-    @ObservedObject var observable: EditWorkoutObservable
+    @StateObject var observable: EditWorkoutObservable
     var onAppend: (WorkoutEditData) -> Void
     
     var body: some View {
