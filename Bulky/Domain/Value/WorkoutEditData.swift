@@ -24,4 +24,11 @@ struct WorkoutEditData {
         self.date = date
         self.sets = sets
     }
+    
+    init (workout : Workout) {
+        self.id = workout.id
+        self.name = workout.menu.name
+        self.date = workout.date
+        self.sets = workout.sets
+    }
 }

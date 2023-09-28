@@ -10,10 +10,9 @@ import SwiftUI
 
 struct WorkoutCollectionView: View {
     @StateObject var observable: WorkoutCollectionViewObservable
-    @State private var showingAddWorkout = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 ForEach(observable.workouts, id: \.id) { workout in
                     NavigationLink(destination: WorkoutDetailView()) {
@@ -25,20 +24,16 @@ struct WorkoutCollectionView: View {
             .navigationBarTitle("Workouts")
             .navigationBarItems(trailing: addButton)
         }
-        .sheet(isPresented: $showingAddWorkout) {
-            NavigationView {
-                EditWorkoutForm(
-                    observable: EditWorkoutObservable()
-                ) { workout in
-                    showingAddWorkout = false
-                    observable.update(data: workout)
-                }
-            }
-        }
     }
     
     private var addButton: some View {
-        Button(action: { showingAddWorkout = true }) {
+        NavigationLink(destination: {
+            EditWorkoutForm(
+                observable: EditWorkoutObservable()
+            ) { workout in
+                observable.update(data: workout)
+            }
+        }) {
             Image(systemName: "plus")
         }
     }

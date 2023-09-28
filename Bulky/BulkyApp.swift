@@ -13,7 +13,12 @@ struct BulkyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WorkoutCollectionView(
+                observable: WorkoutCollectionViewObservable(
+                    collectionService: CollectionWorkoutServicePreview(),
+                    editService: EditWorkoutServicePreview()
+                )
+            )
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
